@@ -10,10 +10,16 @@ def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
 
 def authenticate_user(login: str, password :str):
-    if verify_password:
+    if verify_password():
         return pwd_context.genhash(SECRET_KEY,)
-    
+
+def get_password_hash(password: str):
+    return pwd_context.hash(password)
+
+def get_user_hashed_password(login: str):
+    return 'hashedpassword'
+
 if __name__ == '__main__':
     pwd_context = CryptContext(schemes=['bcrypt'], deprecated='auto')
     oauth2_scheme = OAuth2PasswordBearer(tokenUrl='token')
-    print(pwd_context.hash('pass', scheme='bcrypt'))
+    print(pwd_context.hash('pass'))

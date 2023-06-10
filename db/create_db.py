@@ -1,3 +1,4 @@
+@@ -1,30 +0,0 @@
 from sqlalchemy import create_engine, text
 
 DB_PATH = 'sqlite:///database.db'
