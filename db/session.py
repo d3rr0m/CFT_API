@@ -1,15 +1,13 @@
-from typing import Generator
-from sqlalchemy import create_engine, text, Connection
-from fastapi import Depends
+from typing import Generator, AsyncGenerator
+from sqlalchemy.ext.asyncio import AsyncSession
+from starlette.requests import Request
 
-DB_PATH = 'sqlite:///database.db'
-engine = create_engine(DB_PATH, echo=True)  
-#conn = engine.connect()
 
-def get_db() -> Generator:
+async def get_db_session(request: Request) -> AsyncGenerator[AsyncSession, None]:
+    session: AsyncSession = request.app.state.db_session_factory()
+
     try:
-        connection = engine.connect()
-        yield connection
+        yield session
     finally:
-        connection.close()
-        
+        await session.commit()
+        await session.close()
