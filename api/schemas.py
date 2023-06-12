@@ -18,3 +18,5 @@ class SalaryResponse(BaseModel):
     salary: str
     date_of_increase: str
     all: list
+    login: str
+    exp: str

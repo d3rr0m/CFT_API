@@ -1,7 +1,7 @@
-from typing import Sequence
+from typing import Sequence, Optional
 
-from fastapi import Depends
-from sqlalchemy import text
+from fastapi import Depends, HTTPException, status
+from sqlalchemy import text, Result
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from db.session import get_db_session
@@ -18,3 +18,15 @@ class DataAccessLayer:
         employees = await self.session.execute(text(query))
 
         return employees.mappings().all()
+
+    async def get_hashed_password_by_login(self, login: str) -> Optional[str]:
+        query = f'''
+            select hashed_password from employees where login = "{login}" 
+        '''
+        hashed_password = await self.session.execute(text(query))
+        row = hashed_password.one_or_none()
+        if row:
+            return row.hashed_password
+        else:
+            return None
+            
