@@ -14,7 +14,7 @@ def create_db():
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     login TEXT UNIQUE,
     salary REAL,
-    increment_date DATE,
+    increment_date TEXT,
     hashed_password TEXT);
     ''')
 
@@ -36,7 +36,7 @@ def create_db():
     '''
     INSERT INTO employees 
     (login, salary, increment_date, hashed_password) VALUES
-    ('Roman', 123.33, 08.06, '$2b$12$jYxDraYpMVasqX.zEkmxGO175YNTJyI8W.s1VhkazW6zGDw41en1a')
+    ('Roman', 123.33, '2023-08-01', '$2b$12$jYxDraYpMVasqX.zEkmxGO175YNTJyI8W.s1VhkazW6zGDw41en1a')
     RETURNING id
     ''')
 
@@ -49,12 +49,12 @@ def create_db():
     engine = create_engine(settings.DB_PATH, echo=True)  
     with engine.connect() as conn:
         conn.execute(create_employees_query)
-        conn.execute(pragma_query)
-        conn.execute(create_tokens_query)
+        #conn.execute(pragma_query)
+        #conn.execute(create_tokens_query)
 
         result = conn.execute(insert_employees_data_query).fetchone()
-        new_id = result.id
-        conn.execute(insert_tokens_data_query.bindparams(id=new_id))
+        #new_id = result.id
+        #conn.execute(insert_tokens_data_query.bindparams(id=new_id))
         
         conn.commit()
 

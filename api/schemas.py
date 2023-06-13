@@ -15,8 +15,5 @@ class SalaryRequest(BaseModel):
 
 
 class SalaryResponse(BaseModel):
-    salary: str
-    date_of_increase: str
-    all: list
-    login: str
-    exp: str
+    salary: float
+    increment_date: str

@@ -1,4 +1,4 @@
-from controller.get_token_by_login import verify_password, get_token_by_login
+from controller.token import verify_password, get_token_by_login
 from controller.check_token import check_is_valid_token
 from api.schemas import TokenResponse, TokenRequest, SalaryRequest, SalaryResponse
 from fastapi import HTTPException, status, APIRouter, Depends
@@ -31,8 +31,6 @@ async def get_token(
         )
     
     token=get_token_by_login(request.login, settings.ACCESS_TOKEN_EXPIRE_MINUTES)
-    #get_token_by_login(request.login, request.password)
-    #if token:
     return TokenResponse(token=token)
 
 
@@ -43,18 +41,16 @@ async def get_salary(
 ) -> SalaryResponse:
     """Get employee salary and next date of increment"""
     # if check_is_valid_token(request.token):
-    all_employees = await data_access_layer.get_all_employees()
-    a = check_is_valid_token(request.token)
-    return SalaryResponse(
-        salary='120',
-        date_of_increase='30.05.2022',
-        all=all_employees,
-        login=a[0],
-        exp=a[1]
+    login, experation_date, is_valid = check_is_valid_token(request.token)
+    salary = await data_access_layer.get_salary(login)
+    if is_valid:
+        return SalaryResponse(
+            salary=salary.salary,
+            increment_date=salary.increment_date
     )
-    # else:
-    #     raise HTTPException(
-    #         status_code=status.HTTP_401_UNAUTHORIZED,
-    #         detail='The token has expired or does not exist',
-    #         headers={'WWW-Authentication': 'Bearer'}
-    #     )
+    else:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail='The token has expired or does not exist',
+            headers={'WWW-Authentication': 'Bearer'}
+         )
