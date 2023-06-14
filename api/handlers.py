@@ -1,13 +1,12 @@
+from fastapi import HTTPException, status, APIRouter, Depends
+
 from controller.token import verify_password, get_token_by_login
 from controller.check_token import check_is_valid_token
 from api.schemas import TokenResponse, TokenRequest, SalaryRequest, SalaryResponse
-from fastapi import HTTPException, status, APIRouter, Depends
-
 from db.data_access_layer import DataAccessLayer
-
 import settings
-router = APIRouter()
 
+router = APIRouter()
 
 @router.post('/token', response_model=TokenResponse)
 async def get_token(
@@ -40,7 +39,6 @@ async def get_salary(
     data_access_layer: DataAccessLayer = Depends(),
 ) -> SalaryResponse:
     """Get employee salary and next date of increment"""
-    # if check_is_valid_token(request.token):
     login, experation_date, is_valid = check_is_valid_token(request.token)
     salary = await data_access_layer.get_salary(login)
     if is_valid:

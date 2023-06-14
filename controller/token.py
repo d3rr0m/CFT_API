@@ -1,12 +1,8 @@
 from datetime import timedelta, datetime
-from fastapi import Depends
 from passlib.context import CryptContext
-from sqlalchemy import create_engine, text
 from jose import jwt
 
 import settings
-from db.data_access_layer import DataAccessLayer
-
 
 def get_token_by_login(login: str, expires_delta: timedelta)-> str:
    expiration_date = str(datetime.utcnow() + timedelta(minutes=expires_delta))

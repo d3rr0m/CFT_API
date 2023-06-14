@@ -1,5 +1,6 @@
-DB_PATH = 'sqlite:///database.db'
+CREATE_DB_PATH = 'sqlite:///database.db'
+DB_PATH = 'sqlite+aiosqlite:///database.db'
 SECRET_KEY = '09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7'
-TOKEN = ''
 ALGORITHM = 'HS256'
 ACCESS_TOKEN_EXPIRE_MINUTES = 5
+API_PORT = 8000

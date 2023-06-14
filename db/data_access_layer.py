@@ -1,12 +1,9 @@
-from typing import Sequence, Optional
-from datetime import datetime
-
-from fastapi import Depends, HTTPException, status
+from typing import  Optional
+from fastapi import Depends
 from sqlalchemy import text, Row
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from db.session import get_db_session
-
 
 class DataAccessLayer:
     def __init__(self, session: AsyncSession = Depends(get_db_session)):
@@ -25,3 +22,4 @@ class DataAccessLayer:
             return row.hashed_password
         else:
             return None
+        

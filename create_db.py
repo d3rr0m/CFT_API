@@ -17,21 +17,8 @@ def create_db():
     increment_date TEXT,
     hashed_password TEXT);
     ''')
-
-    pragma_query = text(
-    '''
-    PRAGMA foreign_keys = ON;
-    ''')
     
-    create_tokens_query = text(
-    '''
-    CREATE TABLE IF NOT EXISTS tokens(
-    token TEXT PRIMARY KEY,
-    experation_date DATE,
-    employee_id INTEGER,
-    FOREIGN KEY(employee_id) REFERENCES employees(id))
-    ''')
-    
+    #exmaple data - login: Roman, password: pass
     insert_employees_data_query = text(
     '''
     INSERT INTO employees 
@@ -40,22 +27,10 @@ def create_db():
     RETURNING id
     ''')
 
-    insert_tokens_data_query = text(
-    '''
-    INSERT INTO tokens 
-    (token, experation_date, employee_id) VALUES
-    ('token', '20.01.2023', :id)
-    ''')
-    engine = create_engine(settings.DB_PATH, echo=True)  
+    engine = create_engine(settings.CREATE_DB_PATH, echo=True)  
     with engine.connect() as conn:
         conn.execute(create_employees_query)
-        #conn.execute(pragma_query)
-        #conn.execute(create_tokens_query)
-
-        result = conn.execute(insert_employees_data_query).fetchone()
-        #new_id = result.id
-        #conn.execute(insert_tokens_data_query.bindparams(id=new_id))
-        
+        conn.execute(insert_employees_data_query).fetchone()
         conn.commit()
 
 if __name__== '__main__':
